@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/service"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SWIGGY"
+                android:textStyle="bold"
+                android:layout_toLeftOf="@id/timing"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/timing"
+                android:layout_below="@id/service"
+                android:layout_marginHorizontal="10dp"
+                android:text="Gaurav Jha"
+                android:layout_alignParentLeft="true"
+                />
+
+            <TextView
+                android:id="@+id/delivery_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:layout_toLeftOf="@id/timing"
+                android:layout_marginHorizontal="10dp"
+                android:text="613, G-Block ,Men's Hostel"
+                android:layout_alignParentLeft="true"
+                />
+
+            <TextView
+                android:id="@+id/timing"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:text="03:30 PM"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:layout_alignParentRight="true"
+                android:layout_above="@id/price"
+                />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rs. 500"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:background="@color/yellow"
+                android:layout_below="@id/delivery_address"
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="5dp"
+                android:padding="15dp"/>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="@drawable/dashed_black_line"
+                android:layout_below="@id/delivery_address"
+                android:layout_marginTop="3dp"
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>

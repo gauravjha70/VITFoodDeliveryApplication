@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "27301451715",
+    "firebase_url": "https://vit-food-delivery.firebaseio.com",
+    "project_id": "vit-food-delivery",
+    "storage_bucket": "vit-food-delivery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27301451715:android:a5744d1cf51f38bf",
+        "android_client_info": {
+          "package_name": "android.gaurav.com.vitfooddeliveryapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27301451715-nuot4g38f83jrunu4v9g7kb031ajqq2u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "android.gaurav.com.vitfooddeliveryapplication",
+            "certificate_hash": "653d0ddbe1fbb48f22a8b56e5546621210a2d833"
+          }
+        },
+        {
+          "client_id": "27301451715-3evnkvc0unlp8npthd0nrhb4p66ea4ti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4Gl0dB97w3aIz9Df3_rmUWt_kkOUHQwc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27301451715-3evnkvc0unlp8npthd0nrhb4p66ea4ti.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
