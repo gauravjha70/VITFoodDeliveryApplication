@@ -1,6 +1,9 @@
-package android.gaurav.com.vitfooddeliveryapplication;
+package android.gaurav.com.vitfooddeliveryapplication.Login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.gaurav.com.vitfooddeliveryapplication.R;
+import android.gaurav.com.vitfooddeliveryapplication.UserClass;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,12 +15,15 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -27,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.concurrent.TimeUnit;
@@ -40,6 +47,7 @@ public class SignUpFragment extends Fragment {
     ProgressBar progressBar;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFirestore;
+    UserClass userClass;
 
     public SignUpFragment(){}
 
@@ -63,6 +71,10 @@ public class SignUpFragment extends Fragment {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager inputManager = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
                 registerUser();
             }
         });
@@ -123,7 +135,26 @@ public class SignUpFragment extends Fragment {
                     Toast.makeText(getContext(), "User registered successfully", Toast.LENGTH_SHORT).show();
                     //Mobile Number Authentication
 
-                    //
+                    //Adding user to the database
+                    userClass = new UserClass(email.getText().toString(),registrationNumber.getText().toString(),name.getText().toString()
+                    ,mobileNumber.getText().toString(),0.0);
+
+                    firebaseFirestore.collection("USERS")
+                            .add(userClass)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.e("Added","User data Added Successfully");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    //Delete user data
+
+                                    Toast.makeText(getContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                                }
+                            });
 
                 } else {
                     if (task.getException() instanceof FirebaseAuthUserCollisionException) {

@@ -16,13 +16,13 @@
         <ImageView
             android:id="@+id/profile_img"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:src="@drawable/ic_launcher_background"/>
+            android:src="@drawable/default_user_profile_image"/>
 
         <TextView
-            android:id="@+id/user_name"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_img"
@@ -31,15 +31,6 @@
             android:textAlignment="center"
             android:textSize="30dp"/>
 
-        <TextView
-            android:id="@+id/reg_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/user_name"
-            android:text="17BCE0241"
-            android:layout_centerHorizontal="true"
-            android:textAlignment="center"
-            android:textSize="20dp"/>
 
 
     </RelativeLayout>
@@ -104,11 +95,11 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="20dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/yellow_button_background"
+            android:background="@drawable/black_button_background"
             android:text="Accept"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/yellow"
             android:layout_below="@id/price"
             android:layout_centerHorizontal="true"/>
 

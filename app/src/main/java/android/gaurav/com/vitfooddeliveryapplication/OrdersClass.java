@@ -1,69 +1,86 @@
 package android.gaurav.com.vitfooddeliveryapplication;
 
+import java.io.Serializable;
 import java.sql.Time;
 
-public class OrdersClass {
-    private String username;
+public class OrdersClass implements Serializable {
+    private String email;
+    private String name;
+    private String service, deliveryAddress, orderStatus, message;
+    private String timing, deliveryTimming;
+    private Double price;
 
-    public String getUsername() {
-        return username;
+    public String getMessage() {
+        return message;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public class OrderDetailsClass{
-        private String service, deliveryAddress, orderStatus;
-        private Time timing, deliveryTimming;
-        private Double price;
+    public String getName() {
+        return name;
+    }
 
-        public String getService() {
-            return service;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        public void setService(String service) {
-            this.service = service;
-        }
+    public String getEmail() {
+        return email;
+    }
 
-        public String getDeliveryAddress() {
-            return deliveryAddress;
-        }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-        public void setDeliveryAddress(String deliveryAddress) {
-            this.deliveryAddress = deliveryAddress;
-        }
+    public String getTiming() {
+        return timing;
+    }
 
-        public String getOrderStatus() {
-            return orderStatus;
-        }
+    public void setTiming(String timing) {
+        this.timing = timing;
+    }
 
-        public void setOrderStatus(String orderStatus) {
-            this.orderStatus = orderStatus;
-        }
+    public String getService() {
+        return service;
+    }
 
-        public Time getTimming() {
-            return timing;
-        }
+    public void setService(String service) {
+        this.service = service;
+    }
 
-        public void setTimming(Time timing) {
-            this.timing = timing;
-        }
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
 
-        public Time getDeliveryTimming() {
-            return deliveryTimming;
-        }
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
 
-        public void setDeliveryTimming(Time deliveryTimming) {
-            this.deliveryTimming = deliveryTimming;
-        }
+    public String getOrderStatus() {
+        return orderStatus;
+    }
 
-        public Double getPrice() {
-            return price;
-        }
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 
-        public void setPrice(Double price) {
-            this.price = price;
-        }
+
+    public String getDeliveryTimming() {
+        return deliveryTimming;
+    }
+
+    public void setDeliveryTimming(String deliveryTimming) {
+        this.deliveryTimming = deliveryTimming;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }
+
