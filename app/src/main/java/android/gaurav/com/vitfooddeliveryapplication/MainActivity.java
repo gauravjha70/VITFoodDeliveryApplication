@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                         switch(doc.getType())
                         {
                             case ADDED: OrdersClass order = new OrdersClass();
-                                        if(!user.getEmail().equals(doc.getDocument().getString("email")))
+                                        if((!user.getEmail().equals(doc.getDocument().getString("email"))) && doc.getDocument().getString("orderStatus").equals("Pending"))
                                         {
                                             order.setName(doc.getDocument().getString("name"));
                                             order.setDeliveryAddress(doc.getDocument().getString("deliveryAddress"));
@@ -124,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
                fragmentManager = getSupportFragmentManager();
                fragmentContainer.setClickable(true);
 
+               profileButton.hide();
+               addButton.hide();
+
                orderDetailFragment = new OrderDetailFragment();
                Bundle bundle = new Bundle();
                bundle.putSerializable("object",items.get(position));
@@ -142,6 +145,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 fragmentManager = getSupportFragmentManager();
                 fragmentContainer.setClickable(true);
+
+                profileButton.hide();
+                addButton.hide();
+
                 addOrderFragment = new AddOrderFragment();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
@@ -155,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 fragmentManager = getSupportFragmentManager();
                 fragmentContainer.setClickable(true);
+
+                profileButton.hide();
+                addButton.hide();
+
                 profileFragment = new ProfileFragment();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
@@ -194,5 +205,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else
             super.onBackPressed();
+
+        profileButton.show();
+        addButton.show();
     }
 }
