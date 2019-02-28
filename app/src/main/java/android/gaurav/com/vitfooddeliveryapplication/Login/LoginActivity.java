@@ -100,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (emailID.isEmpty()) {
             email.setError("Email is required");
-            password.requestFocus();
+            email.requestFocus();
             return;
         }
 

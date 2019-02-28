@@ -98,46 +98,39 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
                 });
 
 
-        if(orderType.equals("orderAccept"))
+        switch(orderType)
         {
-            name = getArguments().getString("name");
+            case "orderAccept" : name = getArguments().getString("name");
+                                //Inflating the values to the field
+                                price.setText("Rs. "+(priceS-5));
+                                time.setText(timeS);        //Inflating the values to the field
+                                payButton.setText("ACCEPT ORDER");
+                                walletBalance.setVisibility(View.GONE);
+                                walletBalanceText.setVisibility(View.GONE);
+                                break;
+            case "orderAdd": //Inflating the values to the field
+                                price.setText("Rs. "+priceS);
+                                time.setText(timeS);        //Inflating the values to the field
+                                break;
 
-            //Inflating the values to the field
-            price.setText("Rs. "+(priceS-5));
-            time.setText(timeS);        //Inflating the values to the field
 
-            payButton.setText("ACCEPT ORDER");
-            walletBalance.setVisibility(View.GONE);
-            walletBalanceText.setVisibility(View.GONE);
+            case "orderCancel": orderID = getArguments().getString("orderID");
+                                //Inflating the values to the field
+                                totalAmount.setText("CANCEL ORDER");
+                                priceS = ((OrdersClass)getArguments().getSerializable("object")).getPrice() + 5;
+                                price.setText("Rs. "+priceS);
+                                time.setText(timeS);        //Inflating the values to the field
 
-        }
-        else if(orderType.equals("orderAdd"))
-        {
+                                payButton.setText("CANCEL ORDER");
+                                walletBalance.setVisibility(View.GONE);
+                                walletBalanceText.setText("Are you sure you wan't to cancel the order?");
 
-            //Inflating the values to the field
-            price.setText("Rs. "+priceS);
-            time.setText(timeS);        //Inflating the values to the field
-
-        }
-        else if(orderType.equals("orderCancel"))
-        {
-            orderID = getArguments().getString("orderID");
-
-            //Inflating the values to the field
-            totalAmount.setText("CANCEL ORDER");
-            priceS = ((OrdersClass)getArguments().getSerializable("object")).getPrice() + 5;
-            price.setText("Rs. "+priceS);
-            time.setText(timeS);        //Inflating the values to the field
-
-            payButton.setText("CANCEL ORDER");
-            walletBalance.setVisibility(View.GONE);
-            walletBalanceText.setText("Are you sure you wan't to cancel the order?");
-
-            String orderStatus = ((OrdersClass)getArguments().getSerializable("object")).getService();
-            if(orderStatus.equals("Cancelled"))
-            {
-                payButton.setVisibility(View.GONE);
-            }
+                                String orderStatus = ((OrdersClass)getArguments().getSerializable("object")).getService();
+                                if(orderStatus.equals("Cancelled"))
+                                {
+                                    payButton.setVisibility(View.GONE);
+                                }
+                                break;
         }
 
 
@@ -244,9 +237,9 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
         String date = simpleDateFormat.format(d);
         String time = simpleTimeFormat.format(d);
 
-        TransactionClass transaction = new TransactionClass(priceS,user.getEmail(),"deliVerIT",orderID,date,time,service);
+        TransactionClass transaction = new TransactionClass(priceS,"deliVerIT",orderID,date,time,service);
 
-        firebaseFirestore.collection("TRANSACTIONS")
+        firebaseFirestore.collection("TRANSACTIONS").document(user.getEmail()).collection("transaction")
                 .add(transaction).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {

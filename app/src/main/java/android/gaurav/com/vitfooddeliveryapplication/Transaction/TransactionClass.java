@@ -2,14 +2,13 @@ package android.gaurav.com.vitfooddeliveryapplication.Transaction;
 
 public class TransactionClass {
     double amount;
-    String fromEmail, toEmail;
+    String  toEmail;
     String orderID, date, time;
     String name;
 
-    public TransactionClass(Double amount, String fromEmail, String toEmail, String orderID, String date, String time, String name)
+    public TransactionClass(Double amount, String toEmail, String orderID, String date, String time, String name)
     {
         this.amount = amount;
-        this.fromEmail = fromEmail;
         this.toEmail = toEmail;
         this.orderID = orderID;
         this.date = date;
@@ -23,14 +22,6 @@ public class TransactionClass {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public String getFromEmail() {
-        return fromEmail;
-    }
-
-    public void setFromEmail(String fromEmail) {
-        this.fromEmail = fromEmail;
     }
 
     public String getToEmail() {
