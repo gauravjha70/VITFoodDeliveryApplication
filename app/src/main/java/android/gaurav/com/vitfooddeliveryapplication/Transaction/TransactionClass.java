@@ -6,6 +6,8 @@ public class TransactionClass {
     String orderID, date, time;
     String name;
 
+    public TransactionClass() {}
+
     public TransactionClass(Double amount, String toEmail, String orderID, String date, String time, String name)
     {
         this.amount = amount;

@@ -1,16 +1,21 @@
 package android.gaurav.com.vitfooddeliveryapplication.Transaction;
 
+import android.gaurav.com.vitfooddeliveryapplication.ProfileFragment;
 import android.gaurav.com.vitfooddeliveryapplication.R;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +34,18 @@ public class WalletFragment extends Fragment {
     TextView walletBalance;
     Button addMoney;
     ProgressBar progressBar;
+    RelativeLayout fragmentContainer;
     ListView transactionList;
     ArrayList<TransactionClass> itemList;
     TransactionAdapter adapter;
 
     FirebaseFirestore firebaseFirestore;
     FirebaseUser user;
+
+    FragmentManager fragmentManager;
+
+    AddWalletBalanceFragment addWalletBalanceFragment;
+
 
     @Nullable
     @Override
@@ -44,6 +55,8 @@ public class WalletFragment extends Fragment {
         walletBalance = rootView.findViewById(R.id.wallet_balance);
         addMoney = rootView.findViewById(R.id.add_money_button);
         transactionList = rootView.findViewById(R.id.transaction_list);
+        fragmentContainer = rootView.findViewById(R.id.fragment_container);
+        progressBar = rootView.findViewById(R.id.progress_bar);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -54,16 +67,21 @@ public class WalletFragment extends Fragment {
         transactionList.setAdapter(adapter);
 
         progressBar.setVisibility(View.VISIBLE);
-        firebaseFirestore.collection("TRANSACTION").document(user.getEmail()).collection("transaction")
+        firebaseFirestore.collection("TRANSACTIONS").document(user.getEmail()).collection("transaction")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 progressBar.setVisibility(View.GONE);
                 for(DocumentChange doc : queryDocumentSnapshots.getDocumentChanges())
                 {
+                    Log.e("names",doc.getDocument().getString("orderID"));
                     TransactionClass obj = doc.getDocument().toObject(TransactionClass.class);
                     itemList.add(obj);
+                    Log.e("names",obj.getOrderID());
+
                 }
+                adapter = new TransactionAdapter(getContext(),R.layout.transaction_adapter,itemList);
+                transactionList.setAdapter(adapter);
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -78,7 +96,13 @@ public class WalletFragment extends Fragment {
         addMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fragmentManager = getChildFragmentManager();
+                fragmentContainer.setClickable(true);
 
+                addWalletBalanceFragment = new AddWalletBalanceFragment();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
+                transaction.add(R.id.fragment_container,addWalletBalanceFragment).commit();
             }
         });
 

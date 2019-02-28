@@ -1,6 +1,7 @@
 package android.gaurav.com.vitfooddeliveryapplication;
 
 import android.gaurav.com.vitfooddeliveryapplication.Login.SignUpFragment;
+import android.gaurav.com.vitfooddeliveryapplication.Transaction.WalletFragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -33,13 +34,14 @@ import javax.annotation.Nullable;
 public class MainActivity extends AppCompatActivity {
 
     ListView requestList;
-    FloatingActionButton addButton, profileButton;
+    FloatingActionButton addButton, profileButton, walletbutton, orderButton;
     RelativeLayout fragmentContainer;
 
     AddOrderFragment addOrderFragment;
     OrderDetailFragment orderDetailFragment;
     ProfileFragment profileFragment;
-    Boolean addOrderFrag, orderDetailFrag, profileFrag;
+    WalletFragment walletFragment;
+    Boolean addOrderFrag, orderDetailFrag, profileFrag, walletFrag;
 
     RequestListAdapter requestListAdapter;
     ArrayList<OrdersClass> items;
@@ -61,9 +63,11 @@ public class MainActivity extends AppCompatActivity {
         addButton = findViewById(R.id.add_button);
         fragmentContainer = findViewById(R.id.fragment_container);
         profileButton = findViewById(R.id.profile_button);
+        walletbutton = findViewById(R.id.wallet_button);
+        orderButton = findViewById(R.id.orders_button);
 
         //Initialising flag for fragments
-        addOrderFrag = orderDetailFrag = profileFrag = false;
+        addOrderFrag = orderDetailFrag = profileFrag = walletFrag = false;
 
         //Firebase
         firebaseFirestore = FirebaseFirestore.getInstance();                 //Firestore Initialise
@@ -148,6 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
                 profileButton.hide();
                 addButton.hide();
+                walletbutton.hide();
+                orderButton.hide();
 
                 addOrderFragment = new AddOrderFragment();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -165,12 +171,52 @@ public class MainActivity extends AppCompatActivity {
 
                 profileButton.hide();
                 addButton.hide();
+                walletbutton.hide();
+                orderButton.hide();
 
                 profileFragment = new ProfileFragment();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
                 transaction.add(R.id.fragment_container,profileFragment).commit();
                 profileFrag = true;
+            }
+        });
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager = getSupportFragmentManager();
+                fragmentContainer.setClickable(true);
+
+                profileButton.hide();
+                addButton.hide();
+                walletbutton.hide();
+                orderButton.hide();
+
+                profileFragment = new ProfileFragment();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
+                transaction.add(R.id.fragment_container,profileFragment).commit();
+                profileFrag = true;
+            }
+        });
+
+        walletbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager = getSupportFragmentManager();
+                fragmentContainer.setClickable(true);
+
+                profileButton.hide();
+                addButton.hide();
+                walletbutton.hide();
+                orderButton.hide();
+
+                walletFragment = new WalletFragment();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
+                transaction.add(R.id.fragment_container,walletFragment).commit();
+                walletFrag = true;
             }
         });
     }
@@ -203,10 +249,20 @@ public class MainActivity extends AppCompatActivity {
             fragmentContainer.setClickable(false);
             profileFrag = false;
         }
+        else if(walletFrag){
+            //Removing Wallet fragment to Main Activity
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
+            transaction.remove(walletFragment).commit();
+            fragmentContainer.setClickable(false);
+            walletFrag = false;
+        }
         else
             super.onBackPressed();
 
         profileButton.show();
         addButton.show();
+        walletbutton.show();
+        orderButton.show();
     }
 }

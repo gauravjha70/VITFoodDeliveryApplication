@@ -9,4 +9,6 @@
     <color name="grey"> #a9a9a5 </color>
     <color name="green"> #16a45d </color>
     <color name="red"> #f31818 </color>
+    <color name="dark_blue"> #0d0da2 </color>
+    <color name="light_blue"> #2ec5d6 </color>
 </resources>

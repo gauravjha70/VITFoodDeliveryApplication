@@ -15,30 +15,63 @@
         android:layout_height="match_parent"
         android:overScrollMode="always"
         android:divider="@null"
+        android:paddingBottom="60dp"
         />
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_circle_black_24dp"
-        app:maxImageSize="50dp"
-        android:layout_alignParentEnd="true"
+    <RelativeLayout
         android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingBottom="20dp"
+        android:background="@drawable/blue_white_gradient">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_circle_black_24dp"
+            app:maxImageSize="50dp"
+            android:layout_marginEnd="20dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/profile_black"
+            android:layout_marginStart="20dp"
+            app:maxImageSize="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
         />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/profile_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/profile_black"
-        app:maxImageSize="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp"
-        />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/wallet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/wallet_icon"
+            app:maxImageSize="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@id/profile_button"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/orders_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/order_icon"
+            app:maxImageSize="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_toLeftOf="@id/add_button"
+            android:layout_alignParentBottom="true"
+            />
+
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/fragment_container"

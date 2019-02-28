@@ -98,9 +98,9 @@ public class AddWalletBalanceFragment extends Fragment {
             return;
         }
 
-        if (cardNo.getText().toString().length()!=3) {
-            cardNo.setError("Enter a valid CVV");
-            cardNo.requestFocus();
+        if (cvv.getText().toString().length()!=3) {
+            cvv.setError("Enter a valid CVV");
+            cvv.requestFocus();
             return;
         }
 
@@ -116,6 +116,15 @@ public class AddWalletBalanceFragment extends Fragment {
                         if(name.getText().toString().equals(n) && cvv.getText().toString().equals(c))
                         {
                             addTransactionDetails();
+                        }
+                        else
+                        {
+                            progressBar.setVisibility(View.GONE);
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("PAYMENT FAILED")
+                                    .setMessage("Payment failed due to wrong credentials")
+                                    .setIcon(R.drawable.wrong_red_cross)
+                                    .show();
                         }
                     }
                 });
