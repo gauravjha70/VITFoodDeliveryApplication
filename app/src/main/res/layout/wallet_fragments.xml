@@ -1,6 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp"
+        android:background="@drawable/yellow_white_gradient">
+
+        <ImageView
+            android:id="@+id/wallet_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/wallet"
+            android:layout_marginTop="40dp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/balance_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wallet_icon"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:text="WALLET BALANCE"/>
+
+        <TextView
+            android:id="@+id/wallet_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rs. 3980"
+            android:layout_below="@id/balance_text"
+            android:layout_centerHorizontal="true"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/add_money_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wallet_balance"
+            android:layout_centerHorizontal="true"
+            android:drawableLeft="@drawable/ic_add_circle_black_24dp"
+            android:background="@drawable/green_curve_button"
+            android:textColor="@color/white"
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp"
+            android:drawablePadding="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Add Money"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/transaction_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TRANSACTION HISTORY"
+        android:layout_centerHorizontal="true"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/header_layout"/>
+
+    <ListView
+        android:id="@+id/transaction_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="@color/yellow"
+        android:layout_below="@id/transaction_text"
+        android:background="@color/white"/>
 
 </RelativeLayout>

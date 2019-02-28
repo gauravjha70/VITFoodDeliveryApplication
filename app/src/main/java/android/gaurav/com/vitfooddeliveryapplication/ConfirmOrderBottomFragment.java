@@ -1,5 +1,6 @@
 package android.gaurav.com.vitfooddeliveryapplication;
 
+import android.gaurav.com.vitfooddeliveryapplication.Transaction.TransactionClass;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
 public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
@@ -195,6 +198,7 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
                         else
                         {
                             Toast.makeText(getContext(),"Error while processing the payment",Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.GONE);
                         }
 
                     }
@@ -219,7 +223,33 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
                 .add(ordersClass).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
+                orderID = documentReference.getId();
+                addTransactionDetails();
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(),"Error while processing the payment",Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+    }
 
+    public void addTransactionDetails()
+    {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/YYYY");
+        SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mmaa");
+        Date d = new Date();
+        String date = simpleDateFormat.format(d);
+        String time = simpleTimeFormat.format(d);
+
+        TransactionClass transaction = new TransactionClass(priceS,user.getEmail(),"deliVerIT",orderID,date,time,service);
+
+        firebaseFirestore.collection("TRANSACTIONS")
+                .add(transaction).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
                 progressBar.setVisibility(View.GONE);
                 totalAmount.setText("Order Successful");
                 payButton.setVisibility(View.GONE);
@@ -230,10 +260,13 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getContext(),"Error while processing the payment",Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
 
+
+    //Order Cancellation
     public  void updateRequestList() {
         progressBar.setVisibility(View.VISIBLE);
 
