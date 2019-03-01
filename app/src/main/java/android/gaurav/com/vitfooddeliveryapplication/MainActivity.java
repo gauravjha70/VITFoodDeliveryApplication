@@ -1,6 +1,8 @@
 package android.gaurav.com.vitfooddeliveryapplication;
 
+import android.content.Intent;
 import android.gaurav.com.vitfooddeliveryapplication.Login.SignUpFragment;
+import android.gaurav.com.vitfooddeliveryapplication.Orders.OrdersActivity;
 import android.gaurav.com.vitfooddeliveryapplication.Transaction.WalletFragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -185,19 +187,7 @@ public class MainActivity extends AppCompatActivity {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentManager = getSupportFragmentManager();
-                fragmentContainer.setClickable(true);
-
-                profileButton.hide();
-                addButton.hide();
-                walletbutton.hide();
-                orderButton.hide();
-
-                profileFragment = new ProfileFragment();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
-                transaction.add(R.id.fragment_container,profileFragment).commit();
-                profileFrag = true;
+                startActivity(new Intent(MainActivity.this, OrdersActivity.class));
             }
         });
 

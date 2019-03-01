@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.Time;
 
 public class OrdersClass implements Serializable {
-    private String email;
+    private String email, acceptedByEmail;
     private String name;
     private String service, deliveryAddress, orderStatus, message;
     private String timing, deliveryTimming;
@@ -81,6 +81,14 @@ public class OrdersClass implements Serializable {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getAcceptedByEmail() {
+        return acceptedByEmail;
+    }
+
+    public void setAcceptedByEmail(String acceptedByEmail) {
+        this.acceptedByEmail = acceptedByEmail;
     }
 }
 
