@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
     FragmentManager fragmentManager;
 
+    ArrayList<String> orderIDs;
+
 
 
     @Override
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         requestListAdapter = new RequestListAdapter(getApplicationContext(),R.layout.orders_list_adapter,items);
         requestList.setAdapter(requestListAdapter);
 
+        orderIDs = new ArrayList<String>();
 
         firebaseFirestore.collection("REQUESTS").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                                             order.setEmail(doc.getDocument().getString("email"));
                                             order.setMessage(doc.getDocument().getString("message"));
                                             requestListAdapter.add(order);
+                                            orderIDs.add(doc.getDocument().getId());
                                         }
 
                                         break;
@@ -136,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                orderDetailFragment = new OrderDetailFragment();
                Bundle bundle = new Bundle();
                bundle.putSerializable("object",items.get(position));
+               bundle.putSerializable("orderID",orderIDs.get(position));
                orderDetailFragment.setArguments(bundle);
 
                FragmentTransaction transaction = fragmentManager.beginTransaction();

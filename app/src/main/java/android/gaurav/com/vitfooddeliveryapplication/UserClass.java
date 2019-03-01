@@ -10,6 +10,8 @@ public class UserClass {
     private String mobileNumber;
     private Double credits;
 
+    public UserClass(){}
+
     public UserClass(String email,String regNo, String name, String mobileNumber, Double credits)
     {
             this.email = email;

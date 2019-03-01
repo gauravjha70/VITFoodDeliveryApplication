@@ -1,12 +1,10 @@
 package android.gaurav.com.vitfooddeliveryapplication.Orders;
 
-import android.gaurav.com.vitfooddeliveryapplication.OrderDetailFragment;
 import android.gaurav.com.vitfooddeliveryapplication.OrdersClass;
 import android.gaurav.com.vitfooddeliveryapplication.R;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -17,14 +15,12 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firestore.v1.StructuredQuery;
 
 import java.util.ArrayList;
 
@@ -33,6 +29,7 @@ public class OrdersActivity extends AppCompatActivity {
     ListView pendingList, acceptedList;
 
     ArrayList<OrdersClass> pending,accepted;
+    ArrayList<String> pendingID, acceptedID;
 
     FirebaseFirestore firebaseFirestore;
     FirebaseUser user;
@@ -62,6 +59,8 @@ public class OrdersActivity extends AppCompatActivity {
 
         accepted = new ArrayList<OrdersClass>();
         pending = new ArrayList<OrdersClass>();
+        pendingID = new ArrayList<String>();
+        acceptedID = new ArrayList<String>();
 
         updateLists();
 
@@ -75,6 +74,7 @@ public class OrdersActivity extends AppCompatActivity {
                 acceptedFragment = new AcceptedFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("object",accepted.get(position));
+                bundle.putString("ID",acceptedID.get(position));
                 acceptedFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -94,6 +94,7 @@ public class OrdersActivity extends AppCompatActivity {
                 pendingFragment = new PendingFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("object",pending.get(position));
+                bundle.putString("ID",pendingID.get(position));
                 pendingFragment.setArguments(bundle);
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -107,6 +108,8 @@ public class OrdersActivity extends AppCompatActivity {
 
     private void updateLists()
     {
+        accepted.clear();
+        pending.clear();
         firebaseFirestore.collection("REQUESTS").whereEqualTo("acceptedByEmail",user.getEmail())
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -116,8 +119,13 @@ public class OrdersActivity extends AppCompatActivity {
                     for(DocumentChange doc : task.getResult().getDocumentChanges())
                     {
                         OrdersClass obj = doc.getDocument().toObject(OrdersClass.class);
-                        accepted.add(obj);
+                        if(obj.getOrderStatus().equals("Accepted")) {
+                            accepted.add(obj);
+                            acceptedID.add(doc.getDocument().getId());
+                        }
                     }
+                    OrdersAdapter ordersAdapter = new OrdersAdapter(getApplicationContext(),R.layout.order_adatepter,accepted);
+                    acceptedList.setAdapter(ordersAdapter);
                 }
             }
         })
@@ -138,9 +146,13 @@ public class OrdersActivity extends AppCompatActivity {
                     {
                         OrdersClass obj = doc.getDocument().toObject(OrdersClass.class);
                         if(obj.getOrderStatus().equals("Accepted")) {
-                            accepted.add(obj);
+                            pending.add(obj);
+                            pendingID.add(doc.getDocument().getId());
                         }
                     }
+
+                    OrdersAdapter ordersAdapter = new OrdersAdapter(getApplicationContext(),R.layout.order_adatepter,pending);
+                    pendingList.setAdapter(ordersAdapter);
 
                 }
             }

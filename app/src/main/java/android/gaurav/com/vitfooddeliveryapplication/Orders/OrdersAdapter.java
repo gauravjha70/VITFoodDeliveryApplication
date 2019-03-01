@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ordersAdapter extends ArrayAdapter {
+public class OrdersAdapter extends ArrayAdapter {
     Context context;
     ArrayList<OrdersClass> items;
 
-    public ordersAdapter(@NonNull Context context, int resource, @NonNull ArrayList<OrdersClass> items) {
+    public OrdersAdapter(@NonNull Context context, int resource, @NonNull ArrayList<OrdersClass> items) {
         super(context, resource, items);
         this.context = context;
         this.items = items;

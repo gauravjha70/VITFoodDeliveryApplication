@@ -44,10 +44,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Scanner;
+
+import static android.app.Activity.RESULT_OK;
 
 public class AcceptedFragment extends Fragment {
 
@@ -61,15 +63,11 @@ public class AcceptedFragment extends Fragment {
 
     String orderType="", orderID = "";
 
-    ConfirmOrderBottomFragment confirmOrderBottomFragment;
+    int reqCode = 100;
 
     FirebaseFirestore firebaseFirestore;
     FirebaseUser user;
 
-    BarcodeDetector barcodeDetector;
-    SurfaceView camera;
-    CameraSource cameraSource;
-    SurfaceHolder surfaceHolder;
 
     String scanResult = "";
 
@@ -81,7 +79,7 @@ public class AcceptedFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.acceptedFragment,container,false);
+        View rootView = inflater.inflate(R.layout.accepted_fragment,container,false);
 
         service = rootView.findViewById(R.id.service);
         address = rootView.findViewById(R.id.delivery_address);
@@ -92,16 +90,16 @@ public class AcceptedFragment extends Fragment {
         completeButton = rootView.findViewById(R.id.complete_button);
         profileImage = rootView.findViewById(R.id.profile_img);
         detailSection = rootView.findViewById(R.id.details_section);
-        camera = rootView.findViewById(R.id.camera_view);
         progressBar = rootView.findViewById(R.id.progress_bar);
         regNo = rootView.findViewById(R.id.reg_number);
-        phNo = rootView.findViewById(R.id.phoneNumber);
+        phNo = rootView.findViewById(R.id.phone_number);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         Bundle bundle = getArguments();
         ordersClass = (OrdersClass) bundle.getSerializable("object");
+        orderID = bundle.getString("ID");
 
         service.setText(ordersClass.getService());
         address.setText(ordersClass.getDeliveryAddress());
@@ -110,39 +108,12 @@ public class AcceptedFragment extends Fragment {
         message.setText(ordersClass.getMessage());
         name.setText(ordersClass.getName());
 
-        completeButton.setEnabled(false);
-
-        firebaseFirestore.collection("REQUESTS").whereEqualTo("acceptedByEmail",user.getEmail())
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful())
-                {
-                    for(DocumentChange doc : task.getResult().getDocumentChanges())
-                    {
-                        if(doc.getDocument().getString("email").equals(ordersClass.getEmail()))
-                        {
-                            orderID = doc.getDocument().getId();
-                            completeButton.setEnabled(true);
-                            break;
-                        }
-                    }
-                }
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
+        getUserdetails();
 
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                detailSection.setVisibility(View.GONE);
-                camera.setVisibility(View.VISIBLE);
-                scanner();
+                startActivityForResult(new Intent(getActivity(),Scanner.class),reqCode);
             }
         });
 
@@ -168,72 +139,31 @@ public class AcceptedFragment extends Fragment {
     }
 
 
-    void scanner(){
-        camera.setZOrderMediaOverlay(true);
-        surfaceHolder = camera.getHolder();
-        barcodeDetector = new BarcodeDetector.Builder(getContext())
-                .setBarcodeFormats(Barcode.QR_CODE)
-                .build();
-        if(!barcodeDetector.isOperational())
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == reqCode && resultCode == RESULT_OK)
         {
-            Toast.makeText(getContext(),"Sorry could not detect",Toast.LENGTH_SHORT).show();
-            detailSection.setVisibility(View.VISIBLE);
-            camera.setVisibility(View.GONE);
-        }
-
-        cameraSource = new CameraSource.Builder(getContext(),barcodeDetector)
-                .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedFps(24)
-                .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(1920,1040)
-                .build();
-
-        camera.getHolder().addCallback(new SurfaceHolder.Callback() {
-            @Override
-            public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                try {
-                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-                    {
-                        cameraSource.start(camera.getHolder());
-                    }
-                }
-                catch (Exception e){}
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
-            }
-        });
-
-        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
-            @Override
-            public void release() {
-
-            }
-
-            @Override
-            public void receiveDetections(Detector.Detections<Barcode> detections) {
-                final SparseArray<Barcode> barcodes = detections.getDetectedItems();
-                if(barcodes.size()>0)
-                {
-                    Intent intent = new Intent();
-                    Barcode barcode = barcodes.valueAt(0);
-                    scanResult = barcode.displayValue;
-                    Toast.makeText(getContext(),"Sorry could not detect",Toast.LENGTH_SHORT).show();
-                    detailSection.setVisibility(View.VISIBLE);
-                    camera.setVisibility(View.GONE);
+            if(data!=null)
+            {
+                Barcode barcode = data.getParcelableExtra("barcode");
+                scanResult = barcode.displayValue;
+                if(orderID.equals(scanResult)) {
                     verifyOrder();
                 }
-            }
-        });
+                else
+                {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("WRONG QR CODE")
+                            .setMessage("You scanned an invalid QR Code")
+                            .setIcon(R.drawable.wrong_red_cross)
+                            .show();
 
+                }
+
+            }
+        }
     }
+
 
     void verifyOrder(){
         progressBar.setVisibility(View.VISIBLE);
@@ -268,7 +198,7 @@ public class AcceptedFragment extends Fragment {
                             {
                                 HashMap<String,Object> updator = new HashMap<>();
                                 double updatedWalletBalance = doc.getDocument().getDouble("credits") + ordersClass.getPrice() + cashback;
-                                totalAmount = updatedWalletBalance;
+                                totalAmount = ordersClass.getPrice();
                                 updator.put("credits",updatedWalletBalance);
                                 Log.e("ID",doc.getDocument().getId()+"");
                                 firebaseFirestore.collection("USERS").document(doc.getDocument().getId()+"").update(updator)

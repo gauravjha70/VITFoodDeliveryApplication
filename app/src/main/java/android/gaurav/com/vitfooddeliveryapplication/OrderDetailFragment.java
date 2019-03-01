@@ -64,6 +64,7 @@ public class OrderDetailFragment extends Fragment {
             price.setText("Rs. "+ordersClass.getPrice());
             message.setText(ordersClass.getMessage());
             name.setText(ordersClass.getName());
+            orderID = bundle.getString("orderID","");
         }
 
 
@@ -97,6 +98,7 @@ public class OrderDetailFragment extends Fragment {
                     bundle.putString("message",message.getText().toString());
                     bundle.putString("address",address.getText().toString());
                     bundle.putString("name",name.getText().toString());
+                    bundle.putString("orderID",orderID);
 
                     confirmOrderBottomFragment = new ConfirmOrderBottomFragment();
                     confirmOrderBottomFragment.setArguments(bundle);

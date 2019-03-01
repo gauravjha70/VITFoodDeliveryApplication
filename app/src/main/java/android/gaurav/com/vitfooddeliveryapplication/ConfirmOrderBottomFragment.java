@@ -100,7 +100,8 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
 
         switch(orderType)
         {
-            case "orderAccept" : name = getArguments().getString("name");
+            case "orderAccept" :orderID = getArguments().getString("orderID");
+                                name = getArguments().getString("name");
                                 //Inflating the values to the field
                                 price.setText("Rs. "+(priceS-5));
                                 time.setText(timeS);        //Inflating the values to the field
@@ -139,7 +140,7 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 if(orderType.equals("orderAccept"))
                 {
-
+                    acceptOrder();
                 }
                 else if(orderType.equals("orderAdd"))
                 {
@@ -154,6 +155,31 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
         });
 
         return rootView;
+    }
+
+    private void acceptOrder()
+    {
+        progressBar.setVisibility(View.VISIBLE);
+
+        HashMap<String, Object> updator = new HashMap<>();
+        updator.put("orderStatus", "Accepted");
+        updator.put("acceptedByEmail",user.getEmail());
+        firebaseFirestore.collection("REQUESTS").document(orderID).update(updator)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        payButton.setVisibility(View.GONE);
+                        totalAmount.setText("ORDER ACCEPTED");
+                        progressBar.setVisibility(View.GONE);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Error while processing the payment", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void processPayment()

@@ -90,13 +90,17 @@ public class PendingFragment extends Fragment {
         detailSection = rootView.findViewById(R.id.details_section);
         progressBar = rootView.findViewById(R.id.progress_bar);
         regNo = rootView.findViewById(R.id.reg_number);
-        phNo = rootView.findViewById(R.id.phoneNumber);
+        phNo = rootView.findViewById(R.id.phone_number);
+        qrCode = rootView.findViewById(R.id.qr_code);
+
+        qrCode.setVisibility(View.GONE);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         Bundle bundle = getArguments();
         ordersClass = (OrdersClass) bundle.getSerializable("object");
+        orderID = bundle.getString("ID");
 
         service.setText(ordersClass.getService());
         address.setText(ordersClass.getDeliveryAddress());
@@ -105,32 +109,8 @@ public class PendingFragment extends Fragment {
         message.setText(ordersClass.getMessage());
         name.setText(ordersClass.getName());
 
-        firebaseFirestore.collection("REQUESTS").whereEqualTo("acceptedByEmail",user.getEmail())
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful())
-                {
-                    for(DocumentChange doc : task.getResult().getDocumentChanges())
-                    {
-                        if(doc.getDocument().getString("email").equals(ordersClass.getEmail()))
-                        {
-                            orderID = doc.getDocument().getId();
-                            completeButton.setEnabled(true);
-                            getUserdetails();
-                            generateQRCode();
-                            break;
-                        }
-                    }
-                }
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
+        getUserdetails();
+        generateQRCode();
 
 
         return rootView;
@@ -156,13 +136,13 @@ public class PendingFragment extends Fragment {
     void generateQRCode()
     {
 
-
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(orderID, BarcodeFormat.QR_CODE,200,200);
+            BitMatrix bitMatrix = multiFormatWriter.encode(orderID, BarcodeFormat.QR_CODE,100,100);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
             qrCode.setImageBitmap(bitmap);
+            qrCode.setVisibility(View.VISIBLE);
         }catch(WriterException e) {
             e.printStackTrace();
         }

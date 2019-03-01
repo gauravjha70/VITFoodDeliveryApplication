@@ -25,6 +25,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".Orders.OrdersActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".Orders.Scanner"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
