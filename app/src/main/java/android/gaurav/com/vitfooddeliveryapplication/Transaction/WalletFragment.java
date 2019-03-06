@@ -66,6 +66,47 @@ public class WalletFragment extends Fragment {
 
         transactionList.setAdapter(adapter);
 
+        getTransactions();
+        updateWalletBalance();
+
+        addMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentManager = getChildFragmentManager();
+                fragmentContainer.setClickable(true);
+
+                addWalletBalanceFragment = new AddWalletBalanceFragment();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
+                transaction.add(R.id.fragment_container,addWalletBalanceFragment).commit();
+            }
+        });
+
+        return rootView;
+    }
+
+    void updateWalletBalance()
+    {
+        firebaseFirestore.collection("USERS").whereEqualTo("email",user.getEmail())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for(DocumentChange doc : queryDocumentSnapshots.getDocumentChanges())
+                {
+                    walletBalance.setText("Rs. " + doc.getDocument().getDouble("credits"));
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(),"Unable to retrieve wallet balance!", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    void getTransactions()
+    {
         progressBar.setVisibility(View.VISIBLE);
         firebaseFirestore.collection("TRANSACTIONS").document(user.getEmail()).collection("transaction")
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -91,21 +132,5 @@ public class WalletFragment extends Fragment {
                         progressBar.setVisibility(View.GONE);
                     }
                 });
-
-
-        addMoney.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragmentManager = getChildFragmentManager();
-                fragmentContainer.setClickable(true);
-
-                addWalletBalanceFragment = new AddWalletBalanceFragment();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.setCustomAnimations(R.anim.enter_from_right,R.anim.exit_from_right);
-                transaction.add(R.id.fragment_container,addWalletBalanceFragment).commit();
-            }
-        });
-
-        return rootView;
     }
 }

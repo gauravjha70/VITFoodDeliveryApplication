@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -196,6 +197,16 @@ public class ConfirmOrderBottomFragment extends BottomSheetDialogFragment {
                             {
                                 HashMap<String,Object> updator = new HashMap<>();
                                 name = doc.getDocument().getString("name");
+                                if(priceS > doc.getDocument().getDouble("credits"))
+                                {
+                                    getDialog().cancel();
+                                    new AlertDialog.Builder(getContext())
+                                            .setTitle("ERROR")
+                                            .setMessage("Insufficient wallet balance")
+                                            .setIcon(R.drawable.wrong_red_cross)
+                                            .show();
+                                    return;
+                                }
                                 updatedWalletBalance = doc.getDocument().getDouble("credits") - priceS;
                                 updator.put("credits",updatedWalletBalance);
                                 Log.e("ID",doc.getDocument().getId()+"");
